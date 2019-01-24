@@ -11,6 +11,11 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::middleware(['auth'])
+    ->group(function () {
+        Route::get('/', 'ChatController')
+            ->name('chat');
+    });
+
+Auth::routes();
+
