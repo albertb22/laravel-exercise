@@ -15,7 +15,7 @@
         data() {
             return {
                 channels: [
-                    {
+                    /*{
                         name: 'general',
                         active: true,
                         messages: [
@@ -40,9 +40,17 @@
                                 content: 'Hello from the other side'
                             },
                         ]
-                    }
+                    }*/
                 ]
             }
+        },
+
+        created() {
+            axios.get('/api/channels')
+                .then(response => {
+                    this.channels = response.data;
+                    this.channels[0].active = true;
+                })
         },
 
         mounted() {
@@ -51,7 +59,12 @@
 
         computed: {
             activeChannel() {
-                return this.channels[_.findIndex(this.channels, {active: true})];
+                if (this.channels.length === 0) {
+                    return null;
+                }
+                let index = _.findIndex(this.channels, 'active');
+
+                return this.channels[0];
             }
         },
     }
