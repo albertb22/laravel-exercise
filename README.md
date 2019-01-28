@@ -5,7 +5,7 @@ Voor de websockets raden wij aan gebruik te maken van [Pusher](https://pusher.co
 
 Maak voor ieder onderdeel een aparte branch aan en probeer meerdere commits te maken zodat er inzicht in je werkwijze zit.
 
-De styling voor de opdracht is o.b.v. een component gemaakt met [Tailwind]('https://tailwindcss.com') [https://tailwindcomponents.com/component/slack-clone-1](https://tailwindcomponents.com/component/slack-clone-1) 
+De styling voor de opdracht is o.b.v. een component gemaakt met [Tailwind](https://tailwindcss.com) [https://tailwindcomponents.com/component/slack-clone-1](https://tailwindcomponents.com/component/slack-clone-1) 
 
 ![Example](/resources/screenshots/screenshot-1.png)
 
