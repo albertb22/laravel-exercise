@@ -2,7 +2,7 @@
     <div class="bg-indigo-darker text-purple-lighter flex-none w-64 pb-6 hidden md:block">
         <div class="text-white mb-2 mt-3 px-4 flex justify-between">
             <div class="flex-auto">
-                <h1 class="font-semibold text-xl leading-tight mb-1 truncate">Tailwind CSS</h1>
+                <h1 class="font-semibold text-xl leading-tight mb-1 truncate">Guapa Chat</h1>
                 <div class="flex items-center mb-6">
                     <span class="bg-green rounded-full block w-2 h-2 mr-2"></span>
                     <span class="text-white opacity-50 text-sm" v-text="currentUser.name"></span>

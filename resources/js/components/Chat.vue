@@ -14,34 +14,7 @@
 
         data() {
             return {
-                channels: [
-                    /*{
-                        name: 'general',
-                        active: true,
-                        messages: [
-                            {
-                                name: 'Robert-John',
-                                date: 1548342226,
-                                content: 'Hello from the other side'
-                            },
-                            {
-                                name: 'Robert-John',
-                                date: 1548342226,
-                                content: 'Hello from the other side'
-                            },
-                            {
-                                name: 'Robert-John',
-                                date: 1548342226,
-                                content: 'Hello from the other side'
-                            },
-                            {
-                                name: 'Robert-John',
-                                date: 1548342226,
-                                content: 'Hello from the other side'
-                            },
-                        ]
-                    }*/
-                ]
+                channels: []
             }
         },
 
