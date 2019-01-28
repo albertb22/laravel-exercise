@@ -34,7 +34,7 @@ In het tweede onderdeel ga je verder op onderdeel 1 en ga je van public channels
 * Seed 10 verschillende gebruikers
 * Gebruikers tonen onder het kopje "Direct messages"
 * Tonen of een gebruiker online is (presence channels)
-* Bij het aanklikken van een gebruiker wordt
+* Bij het aanklikken van een gebruiker wordt de chat vervangen met de chat van die persoon
 * Een direct message kunnen versturen naar een persoon (encryptie in DB niet vereist)
 
 ## Onderdeel 3
