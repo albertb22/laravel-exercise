@@ -16,12 +16,12 @@
             <!-- Chat messages -->
             <div class="px-6 py-4 flex-1 overflow-y-scroll">
                 <!-- A message -->
-                <div v-for="(message, index) in activeChannel.messages" :key="index" class="flex items-start mb-4 text-sm">
+                <div v-for="(message, index) in messages" :key="index" class="flex items-start mb-4 text-sm">
                     <img src="https://placehold.it/10x10" class="w-10 h-10 rounded mr-3">
                     <div class="flex-1 overflow-hidden">
                         <div>
-                            <span class="font-bold" v-text="message.name"></span>
-                            <span class="text-grey text-xs" v-text="message.date"></span>
+                            <span class="font-bold" v-text="message.send_by.name"></span>
+                            <span class="text-grey text-xs" v-text="message.created_at"></span>
                         </div>
                         <p class="text-black leading-normal" v-text="message.content"></p>
                     </div>
@@ -49,17 +49,17 @@
         },
         data() {
             return {
-                message: ''
+                message: '',
+                messages: []
             }
         },
         watch: {
             activeChannel(newValue, oldValue) {
                 if (newValue !== null) {
-
+                    this.getMessages()
                 }
             }
         },
-
         methods: {
             sendMessage() {
                 if (this.message !== '') {
@@ -72,6 +72,12 @@
                         }
                     })
                 }
+            },
+            getMessages() {
+                axios.get(`/api/channels/${this.activeChannel.id}/messages`)
+                    .then(response => {
+                        this.messages = response.data;
+                    })
             }
         }
     }

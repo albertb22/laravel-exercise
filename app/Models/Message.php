@@ -15,4 +15,14 @@ class Message extends Model
     {
         return $this->morphTo();
     }
+
+    /**
+     * Get the user who send the message
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function sendBy()
+    {
+        return $this->belongsTo(User::class, 'send_by');
+    }
 }

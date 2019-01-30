@@ -30,7 +30,9 @@
         mounted() {
 
         },
+        methods: {
 
+        },
         computed: {
             activeChannel() {
                 if (this.channels.length === 0) {
