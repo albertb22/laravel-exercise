@@ -56,7 +56,8 @@
         watch: {
             activeChannel(newValue, oldValue) {
                 if (newValue !== null) {
-                    this.getMessages()
+                    this.getMessages();
+                    this.listenForNewMessages(oldValue);
                 }
             }
         },
@@ -67,7 +68,7 @@
                         message: this.message
                     })
                     .then(response => {
-                        if (response.success) {
+                        if (response.data.success) {
                             this.message = '';
                         }
                     })
@@ -78,6 +79,16 @@
                     .then(response => {
                         this.messages = response.data;
                     })
+            },
+            listenForNewMessages(channelToLeave) {
+                if (channelToLeave !== null) {
+                    Echo.leaveChannel(`channels.${channelToLeave.id}`)
+                }
+
+                Echo.channel(`channels.${this.activeChannel.id}`)
+                    .listen('.message.created', (message) => {
+                        this.messages.push(message);
+                    });
             }
         }
     }

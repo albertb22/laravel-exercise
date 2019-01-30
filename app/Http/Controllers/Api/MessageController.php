@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Events\Messages\MessageCreated;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Messages\SendMessageRequest;
 use App\Models\Channel;
@@ -25,6 +26,8 @@ class MessageController extends Controller
         $message->send_by = auth()->user()->id;
 
         $channel->messages()->save($message);
+
+        event(new MessageCreated($message));
 
         return response()->json(['success' => true]);
     }
