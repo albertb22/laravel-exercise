@@ -37,6 +37,14 @@ class User extends Authenticatable
     use HasApiTokens, Notifiable;
 
     /**
+     * @var array
+     */
+    protected $appends = [
+        'active',
+        'type',
+    ];
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array
@@ -53,4 +61,28 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    /**
+     * Get all channel's messages
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     */
+    public function messages()
+    {
+        return $this->morphMany(Message::class, 'messageable');
+    }
+
+    /**
+     * @return bool
+     */
+    public function getActiveAttribute() {
+        return false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getTypeAttribute() {
+        return 'users';
+    }
 }

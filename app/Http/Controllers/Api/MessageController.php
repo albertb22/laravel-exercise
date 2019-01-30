@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Messages\SendMessageRequest;
 use App\Models\Channel;
 use App\Models\Message;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class MessageController extends Controller
@@ -21,11 +22,37 @@ class MessageController extends Controller
      */
     public function sendToChannel(SendMessageRequest $request, Channel $channel)
     {
+        return $this->send($channel, $request->get('message'));
+    }
+
+    /**
+     * Send a message to a user
+     *
+     * @param SendMessageRequest $request
+     * @param User               $user
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function sendToUser(SendMessageRequest $request, User $user)
+    {
+        return $this->send($user, $request->get('message'));
+    }
+
+    /**
+     * Send a message
+     *
+     * @param $model
+     * @param $content
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function send($model, $content)
+    {
         $message = new Message;
-        $message->content = $request->get('message');
+        $message->content = $content;
         $message->send_by = auth()->user()->id;
 
-        $channel->messages()->save($message);
+        $model->messages()->save($message);
 
         event(new MessageCreated($message));
 

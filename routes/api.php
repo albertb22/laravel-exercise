@@ -23,4 +23,8 @@ Route::middleware('auth:api')->group(function () {
          ->name('users.index');
     Route::get('users/auth', 'UserController@getAuthUser')
          ->name('users.auth');
+    Route::get('users/{user}/messages', 'UserController@getMessages')
+         ->name('users.messages.index');
+    Route::post('users/{user}/messages', 'MessageController@sendToUser')
+         ->name('users.messages.store');
 });

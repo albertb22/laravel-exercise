@@ -1,6 +1,6 @@
 <template>
     <div class="flex-1 flex flex-col bg-white overflow-hidden">
-        <template v-if="activeChannel === null">
+        <template v-if="activeChat === null || typeof activeChat === 'undefined'">
             <div class="flex items-center content-center justify-center h-full">
                 Loading, please wait...
             </div>
@@ -9,8 +9,8 @@
             <!-- Top bar -->
             <div class="border-b flex px-6 py-2 items-center flex-none">
                 <div class="flex flex-col">
-                    <h3 class="text-grey-darkest mb-1 font-extrabold">#{{ activeChannel.name }}</h3>
-                    <div class="text-grey-dark text-sm truncate" v-text="activeChannel.description"></div>
+                    <h3 class="text-grey-darkest mb-1 font-extrabold">#{{ activeChat.name }}</h3>
+                    <div class="text-grey-dark text-sm truncate" v-text="activeChat.description"></div>
                 </div>
             </div>
             <!-- Chat messages -->
@@ -42,7 +42,10 @@
 <script>
     export default {
         props: {
-            activeChannel: {
+            activeChat: {},
+            authUser: {
+                type: Object,
+                default: null
             }
         },
         data() {
@@ -52,17 +55,22 @@
             }
         },
         watch: {
-            activeChannel(newValue, oldValue) {
-                if (newValue !== null) {
+            activeChat(newValue, oldValue) {
+                if (newValue !== null && typeof newValue !== 'undefined') {
                     this.getMessages();
-                    this.listenForNewMessages(oldValue);
+
+                    if (oldValue !== null && typeof oldValue !== 'undefined') {
+                        this.stopListeningForNewMessages(oldValue);
+                    }
+
+                    this.listenForNewMessages();
                 }
             }
         },
         methods: {
             sendMessage() {
                 if (this.message !== '') {
-                    axios.post(`/api/channels/${this.activeChannel.id}/messages`, {
+                    axios.post(`/api/${this.activeChat.type}/${this.activeChat.id}/messages`, {
                         message: this.message
                     })
                     .then(response => {
@@ -73,20 +81,36 @@
                 }
             },
             getMessages() {
-                axios.get(`/api/channels/${this.activeChannel.id}/messages`)
+                axios.get(`/api/${this.activeChat.type}/${this.activeChat.id}/messages`)
                     .then(response => {
                         this.messages = response.data;
                     })
             },
-            listenForNewMessages(channelToLeave) {
-                if (channelToLeave !== null) {
-                    Echo.leave(`channels.${channelToLeave.id}`)
-                }
-
-                Echo.channel(`channels.${this.activeChannel.id}`)
+            listenForNewMessages() {
+                Echo.private(this.getChannelName(this.activeChat))
                     .listen('.message.created', (message) => {
                         this.messages.push(message);
                     });
+            },
+            stopListeningForNewMessages(chat) {
+                Echo.leave(this.getChannelName(chat));
+            },
+            getChannelName(chat) {
+                if (chat.type === 'users') {
+                    let channelName = `${chat.type}.`;
+                    let sender = this.authUser.id;
+                    let receiver = chat.id;
+
+                    if (sender > receiver) {
+                        channelName += `${receiver}_${sender}`;
+                    } else {
+                        channelName += `${sender}_${receiver}`;
+                    }
+
+                    return channelName;
+                }
+
+                return `${chat.type}.${chat.id}`;
             }
         }
     }

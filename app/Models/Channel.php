@@ -10,7 +10,8 @@ class Channel extends Model
      * @var array
      */
     protected $appends = [
-        'active'
+        'active',
+        'type'
     ];
 
     /**
@@ -28,5 +29,12 @@ class Channel extends Model
      */
     public function getActiveAttribute() {
         return false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getTypeAttribute() {
+        return 'channels';
     }
 }

@@ -37,7 +37,7 @@ class MessageCreated implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new Channel('channels.' . $this->message->messageable_id);
+        return new PrivateChannel($this->getChannelName());
     }
 
     /**
@@ -62,5 +62,27 @@ class MessageCreated implements ShouldBroadcast
                     $query->select(['id', 'name']);
                 }
             ])->toArray();
+    }
+
+    /**
+     * @return string
+     */
+    public function getChannelName()
+    {
+        if ($this->message->messageable->type == 'users') {
+             $channelName = $this->message->messageable->type . '.';
+             $sender = $this->message->sendBy->id;
+             $receiver = $this->message->messageable_id;
+
+             if ($sender > $receiver) {
+                 $channelName .= $receiver . '_' . $sender;
+             } else {
+                 $channelName .= $sender . '_' . $receiver;
+             }
+
+             return $channelName;
+        }
+
+        return $this->message->messageable->type . '.' . $this->message->messageable_id;
     }
 }

@@ -1,7 +1,7 @@
 <template>
     <div class="font-sans antialiased h-screen flex">
-        <chat-sidebar :channels="channels" :users="users" :authUser="authUser" @switchActiveChannel="switchActiveChannel" v-if="authUser !== null"></chat-sidebar>
-        <chat-content :active-channel="activeChannel"></chat-content>
+        <chat-sidebar :chats="chats" :authUser="authUser" @switchActiveChat="switchActiveChat" v-if="authUser !== null"></chat-sidebar>
+        <chat-content :active-chat="activeChat" :authUser="authUser" v-if="authUser !== null"></chat-content>
     </div>
 </template>
 
@@ -14,12 +14,11 @@
 
         data() {
             return {
+                chats: [],
                 authUser: {
                     name: '',
                     status: 'online'
                 },
-                channels: [],
-                users: []
             }
         },
 
@@ -29,47 +28,48 @@
                     this.authUser = response.data;
                 });
 
-            axios.get('/api/users')
-                .then(response => {
-                    this.users = response.data;
-                });
-
             axios.get('/api/channels')
                 .then(response => {
-                    this.channels = response.data;
-                    this.channels[0].active = true;
+                    this.chats = this.chats.concat(response.data);
+
+                    this.chats.filter((chat) => {
+                        return chat.type === 'channels';
+                    })[0].active = true;
+                });
+
+            axios.get('/api/users')
+                .then(response => {
+                    this.chats = this.chats.concat(response.data);
                 });
         },
-
         mounted() {
 
         },
         methods: {
-            switchActiveChannel(newActiveChannel) {
-                if (this.activeChannel.id !== newActiveChannel.id) {
-                    this.channels.forEach((channel, index) => {
-                        channel.active = false
+            switchActiveChat(newActiveChat) {
+                if (! (this.activeChat.id === newActiveChat.id && this.activeChat.type === newActiveChat.type)) {
+                    this.chats.forEach((chat) => {
+                        chat.active = false
                     });
 
-                    let index = _.findIndex(this.channels, (channel) =>  {
-                        return channel.id === newActiveChannel.id
+                    let index = _.findIndex(this.chats, (chat) =>  {
+                        return chat.id === newActiveChat.id && chat.type === newActiveChat.type;
                     });
 
                     if (index !== -1) {
-                        this.channels[index].active = true;
+                        this.chats[index].active = true;
                     }
                 }
             }
         },
         computed: {
-            activeChannel() {
-                if (this.channels.length === 0) {
+            activeChat() {
+                if (this.chats.length === 0) {
                     return null;
                 }
-                let index = _.findIndex(this.channels, 'active');
-
-                return this.channels[index];
-            }
+                let index = _.findIndex(this.chats, 'active');
+                return this.chats[index];
+            },
         },
     }
 </script>
