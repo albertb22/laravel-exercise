@@ -1,6 +1,6 @@
 <template>
     <div class="font-sans antialiased h-screen flex">
-        <chat-sidebar :channels="channels" @switchActiveChannel="switchActiveChannel"></chat-sidebar>
+        <chat-sidebar :channels="channels" :users="users" :authUser="authUser" @switchActiveChannel="switchActiveChannel" v-if="authUser !== null"></chat-sidebar>
         <chat-content :active-channel="activeChannel"></chat-content>
     </div>
 </template>
@@ -14,17 +14,31 @@
 
         data() {
             return {
-                channels: [
-                ]
+                authUser: {
+                    name: '',
+                    status: 'online'
+                },
+                channels: [],
+                users: []
             }
         },
 
         created() {
+            axios.get('/api/users/auth')
+                .then(response => {
+                    this.authUser = response.data;
+                });
+
+            axios.get('/api/users')
+                .then(response => {
+                    this.users = response.data;
+                });
+
             axios.get('/api/channels')
                 .then(response => {
                     this.channels = response.data;
                     this.channels[0].active = true;
-                })
+                });
         },
 
         mounted() {

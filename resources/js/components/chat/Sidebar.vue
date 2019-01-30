@@ -5,7 +5,7 @@
                 <h1 class="font-semibold text-xl leading-tight mb-1 truncate">Tailwind CSS</h1>
                 <div class="flex items-center mb-6">
                     <span class="bg-green rounded-full block w-2 h-2 mr-2"></span>
-                    <span class="text-white opacity-50 text-sm" v-text="currentUser.name"></span>
+                    <span class="text-white opacity-50 text-sm" v-text="authUser.name"></span>
                 </div>
             </div>
         </div>
@@ -31,14 +31,9 @@
                     </svg>
                 </div>
             </div>
-            <div class="flex items-center mb-3 px-4">
-                <span class="bg-green rounded-full block w-2 h-2 mr-2"></span>
-                <span class="text-white opacity-75">{{ currentUser.name }} <span class="text-grey text-sm">(you)</span></span>
-            </div>
-
             <div v-for="user in users" class="flex items-center mb-3 px-4">
                 <span class="bg-green rounded-full block w-2 h-2 mr-2"></span>
-                <span class="text-white opacity-75" v-text="user"></span>
+                <span class="text-white opacity-75">{{user.name}} <span class="text-grey text-sm" v-if="user.id === authUser.id">(you)</span></span>
             </div>
         </div>
     </div>
@@ -51,15 +46,19 @@
                 type: Array,
                 default: [],
             },
+            users: {
+                type: Array,
+                default: []
+            },
+            authUser: {
+                type: Object,
+                default: null
+            }
         },
 
         data() {
             return {
-                currentUser: {
-                    name: 'Guapa',
-                    status: 'Online'
-                },
-                users: []
+
             }
         },
         methods: {

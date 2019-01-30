@@ -18,4 +18,9 @@ Route::middleware('auth:api')->group(function () {
         ->name('channels.messages.index');
     Route::post('channels/{channel}/messages', 'MessageController@sendToChannel')
         ->name('channels.messages.store');
+
+    Route::get('users', 'UserController@index')
+         ->name('users.index');
+    Route::get('users/auth', 'UserController@getAuthUser')
+         ->name('users.auth');
 });
