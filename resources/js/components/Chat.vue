@@ -1,6 +1,6 @@
 <template>
     <div class="font-sans antialiased h-screen flex">
-        <chat-sidebar :channels="channels"></chat-sidebar>
+        <chat-sidebar :channels="channels" @switchActiveChannel="switchActiveChannel"></chat-sidebar>
         <chat-content :active-channel="activeChannel"></chat-content>
     </div>
 </template>
@@ -31,7 +31,21 @@
 
         },
         methods: {
+            switchActiveChannel(newActiveChannel) {
+                if (this.activeChannel.id !== newActiveChannel.id) {
+                    this.channels.forEach((channel, index) => {
+                        channel.active = false
+                    });
 
+                    let index = _.findIndex(this.channels, (channel) =>  {
+                        return channel.id === newActiveChannel.id
+                    });
+
+                    if (index !== -1) {
+                        this.channels[index].active = true;
+                    }
+                }
+            }
         },
         computed: {
             activeChannel() {
@@ -40,7 +54,7 @@
                 }
                 let index = _.findIndex(this.channels, 'active');
 
-                return this.channels[0];
+                return this.channels[index];
             }
         },
     }

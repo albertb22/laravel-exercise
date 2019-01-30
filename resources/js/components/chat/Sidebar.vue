@@ -19,7 +19,7 @@
                     </svg>
                 </div>
             </div>
-            <div v-for="channel in channels" :class="[channel.active ? 'bg-teal-dark' : '', 'py-1 px-4 text-white']"># {{ channel.name }}</div>
+            <div v-for="(channel, index) in channels" :key="index" :class="[channel.active ? 'bg-teal-dark' : '', 'py-1 px-4 text-white']" @click="switchActiveChannel(channel)"># {{ channel.name }}</div>
         </div>
 
         <div class="mb-8">
@@ -62,5 +62,10 @@
                 users: []
             }
         },
+        methods: {
+            switchActiveChannel(channel) {
+                this.$emit('switchActiveChannel', channel)
+            }
+        }
     }
 </script>

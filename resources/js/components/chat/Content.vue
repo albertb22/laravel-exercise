@@ -43,8 +43,6 @@
     export default {
         props: {
             activeChannel: {
-                id: null,
-                messages: []
             }
         },
         data() {
@@ -82,7 +80,7 @@
             },
             listenForNewMessages(channelToLeave) {
                 if (channelToLeave !== null) {
-                    Echo.leaveChannel(`channels.${channelToLeave.id}`)
+                    Echo.leave(`channels.${channelToLeave.id}`)
                 }
 
                 Echo.channel(`channels.${this.activeChannel.id}`)

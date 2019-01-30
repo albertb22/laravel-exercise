@@ -7,6 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 class Channel extends Model
 {
     /**
+     * @var array
+     */
+    protected $appends = [
+        'active'
+    ];
+
+    /**
      * Get all channel's messages
      *
      * @return \Illuminate\Database\Eloquent\Relations\MorphMany
@@ -14,5 +21,12 @@ class Channel extends Model
     public function messages()
     {
         return $this->morphMany(Message::class, 'messageable');
+    }
+
+    /**
+     * @return bool
+     */
+    public function getActiveAttribute() {
+        return false;
     }
 }
